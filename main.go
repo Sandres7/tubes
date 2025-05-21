@@ -21,10 +21,10 @@ type anggota struct {
 	peranAnggota     string
 }
 
-type tabelAnggota [NMAX]anggota
-type tabelStartup [NMAX]startup
+type tabelAnggota [NMAX]anggota //inisiasi arrray anggota
+type tabelStartup [NMAX]startup //inisiasi array startup
 
-func printMenu() {
+func printMenu() { // opsi menu pilihan utama
 	fmt.Println()
 	fmt.Println("----------------------------------------------")
 	fmt.Println("Selamat datang di layanan Start Up (beta)")
@@ -35,6 +35,7 @@ func printMenu() {
 	fmt.Println("4. Print Data Anggota")
 	fmt.Println("5. Urutkan Startup")
 	fmt.Println("6. Hapus Data StartUp")
+	fmt.Println("7. Tambah Startup Baru")
 	fmt.Println("----------------------------------------------")
 
 }
@@ -76,7 +77,7 @@ func inputData(tabel *tabelStartup) {
 	}
 }
 
-func printData(tabel tabelStartup) {
+func printData(tabel tabelStartup) { // print data startup
 	var i int
 	var jum int
 
@@ -87,17 +88,11 @@ func printData(tabel tabelStartup) {
 	}
 }
 
-func inputAngota(tabel *tabelAnggota, idStartup, jumlah int) { //jumlah = anggota yang mau di input
-	var kosong int
+func inputAnggota(tabel *tabelAnggota, idStartup, jumlah int) { //input anggota berdasarkan id startup
 	var i int
-	idStartup--
-	for i = 0; i < NMAX; i++ {
-		if len(tabel[i].namaAnggota) == 0 {
-			kosong = i
-			break
-		}
-	}
-	for i = kosong; i < kosong+jumlah; i++ {
+	var jum int = hitungAnggota(*tabel)
+
+	for i = jum; i < jum+jumlah; i++ {
 		fmt.Println("Nama Anggota, Peran Anggota")
 		tabel[i].idStartupAnggota = idStartup
 		fmt.Scan(&tabel[i].namaAnggota, &tabel[i].peranAnggota)
@@ -286,8 +281,28 @@ func sortAnggota(tabel *tabelAnggota) {
 	}
 }
 
-func tambahStartup() {
-	//soon
+func tambahStartup(tabel *tabelStartup) {
+	var i, idBaru int
+	var stop bool = false
+	var jum int = hitungStartUp(*tabel)
+	for i = 0; i < jum && stop == false; i++ {
+		if tabel[i+1].idStartup-tabel[i].idStartup > 1 {
+			idBaru = i + 1
+			stop = true
+		} else {
+			idBaru = jum
+		}
+	}
+	tabel[jum].idStartup = idBaru
+	fmt.Println("Masukkan Data Start Up")
+	fmt.Print("Nama Start Up : ")
+	fmt.Scan(&tabel[jum].nama)
+	fmt.Print("Bidang Start Up : ")
+	fmt.Scan(&tabel[jum].bidang)
+	fmt.Print("Tahun Didirikan: ")
+	fmt.Scan(&tabel[jum].tahun)
+	fmt.Print("Pendanaan (juta): ")
+	fmt.Scan(&tabel[jum].pendanaan)
 }
 
 func editStartup(tabel *tabelStartup, target int) { //target = id Startup
@@ -305,12 +320,27 @@ func editStartup(tabel *tabelStartup, target int) { //target = id Startup
 
 }
 
-func tambahAnggota() {
+func hapusAnggota(tabel *tabelAnggota, idStartup int) {
+	var i, tot, j int
+	var jum int = hitungAnggota(*tabel)
+	for i = 0; i < jum; i++ {
+		if tabel[i].idStartupAnggota == idStartup {
+			tot++
+		}
+	}
 
-}
+	for i = 0; i < jum; i++ {
+		if tabel[i].idStartupAnggota == idStartup {
+			for j = i; j < jum; j++ {
+				tabel[j] = tabel[j+1]
+			}
+			jum--
+		}
 
-func editAnggota() {
-
+	}
+	for i = 0; i < tot; i++ {
+		tabel[jum+i] = anggota{}
+	}
 }
 
 func binSearch(tabel tabelStartup, dicari int) int {
@@ -318,9 +348,7 @@ func binSearch(tabel tabelStartup, dicari int) int {
 	var idx int
 	var jum int
 	sortIndexStartup(&tabel)
-	fmt.Println(tabel)
 	jum = hitungStartUp(tabel)
-	fmt.Println(jum)
 
 	left = 0
 	right = jum - 1
@@ -369,7 +397,7 @@ func main() {
 			fmt.Scan(&pilihanData)
 			fmt.Println("Jumlah Anggota")
 			fmt.Scan(&jumlahAnggota)
-			inputAngota(&tabAnggota, pilihanData, jumlahAnggota)
+			inputAnggota(&tabAnggota, pilihanData, jumlahAnggota)
 		case 4:
 			fmt.Println("Anggota Kelompok yang ingin di Tampilkan")
 			printData(tabStartup)
@@ -416,6 +444,13 @@ func main() {
 				hapuStartup(&tabStartup, pilihanData)
 				printData(tabStartup)
 			}
+			hapusAnggota(&tabAnggota, pilihanData)
+		case 7:
+			fmt.Println("Startup baru yang ingin di tambahkan")
+			sortIndexStartup(&tabStartup)
+			tambahStartup(&tabStartup)
+			sortIndexStartup(&tabStartup)
+			fmt.Println("Data Berhasil Di tambahkan")
 		}
 		printMenu()
 		fmt.Scan(&menu)
