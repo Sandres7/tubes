@@ -63,7 +63,26 @@ func tampilkanMenuUtama() {
 	fmt.Println("║2. 👥 Kelola Tim Startup              ║")
 	fmt.Println("║3. 🔍 Cari Startup                    ║")
 	fmt.Println("║4. 📊 Urutkan Daftar Startup          ║")
-	fmt.Println("║5. ❌ Keluar Aplikasi                 ║")
+	fmt.Println("║5. 🧾 Laporan Bidang Usaha            ║")
+	fmt.Println("║6. ❌ Keluar Aplikasi                 ║")
+	fmt.Println("║9. ⚙️ Pilih Role                      ║")
+	fmt.Println("╚══════════════════════════════════════╝")
+}
+
+func menuPengguna() {
+	clear()
+	fmt.Println("\n╔══════════════════════════════════════╗")
+	fmt.Println("║    🚀 APLIKASI MANAJEMEN STARTUP 🚀  ║")
+	fmt.Println("║        Dibuat oleh: Sandres          ║")
+	fmt.Println("║            103012400100              ║")
+	fmt.Println("╠══════════════════════════════════════╣")
+	fmt.Println("║1. 📁 Tampilkan Startup               ║")
+	fmt.Println("║2. 👥 Tampilkan Anggota Startup       ║")
+	fmt.Println("║3. 🔍 Cari Startup                    ║")
+	fmt.Println("║4. 📊 Urutkan Daftar Startup          ║")
+	fmt.Println("║5. 🧾 Laporan Bidang Usaha            ║")
+	fmt.Println("║6. ❌ Keluar Aplikasi                 ║")
+	fmt.Println("║9. ⚙️ Pilih Role                      ║")
 	fmt.Println("╚══════════════════════════════════════╝")
 }
 
@@ -95,8 +114,11 @@ func menuKelolaDataStartup(tabel *tabelStartup, tabAnggota *tabelAnggota) {
 	case 2:
 		sortIndexStartup(tabel)
 		printData(*tabel)
-		fmt.Println("Masukkan Nama Startup yang ingin diubah")
+		fmt.Println("Masukkan Nama Startup yang ingin diubah (Masukkan - untuk cancel)")
 		fmt.Scan(&nama)
+		if nama == "-" {
+			return
+		}
 		nama = strings.ToLower(nama)
 		lokasi = sequentialSearchStartup(*tabel, nama)
 		if lokasi == -1 {
@@ -111,8 +133,11 @@ func menuKelolaDataStartup(tabel *tabelStartup, tabAnggota *tabelAnggota) {
 	case 3:
 		sortIndexStartup(tabel)
 		printData(*tabel)
-		fmt.Println("Masukkan Nama Startup yang ingin Dihapus")
+		fmt.Println("Masukkan Nama Startup yang ingin Dihapus (Masukkan - untuk cancel)")
 		fmt.Scan(&nama)
+		if nama == "-" {
+			return
+		}
 		nama = strings.ToLower(nama)
 		lokasi = sequentialSearchStartup(*tabel, nama)
 		if lokasi == -1 {
@@ -161,8 +186,11 @@ func menuKelolaTimStartup(tabAnggota *tabelAnggota, tabStartup *tabelStartup) {
 	case 1:
 		sortIndexStartup(tabStartup)
 		printData(*tabStartup)
-		fmt.Println("Nama Startup yang ingin ditambahkan anggotanya ?")
+		fmt.Println("Nama Startup yang ingin ditambahkan anggotanya ? (Masukkan - untuk cancel)")
 		fmt.Scan(&nama)
+		if nama == "-" {
+			return
+		}
 		nama = strings.ToLower(nama)
 		lokasi = sequentialSearchStartup(*tabStartup, nama)
 		if lokasi == -1 {
@@ -179,11 +207,13 @@ func menuKelolaTimStartup(tabAnggota *tabelAnggota, tabStartup *tabelStartup) {
 		}
 
 	case 2:
-		fmt.Println("Startup yang ingin di hapus anggota nya")
 		sortIndexStartup(tabStartup)
 		printData(*tabStartup)
-		fmt.Println("Masukkan Nama Startup yang ingin Dihapus Anggotanya")
+		fmt.Println("Masukkan Nama Startup yang ingin Dihapus Anggotanya (Masukkan - untuk cancel)")
 		fmt.Scan(&nama)
+		if nama == "-" {
+			return
+		}
 		nama = strings.ToLower(nama)
 		lokasi = sequentialSearchStartup(*tabStartup, nama)
 		hapusAnggota(tabAnggota, lokasi)
@@ -201,7 +231,7 @@ func menuKelolaTimStartup(tabAnggota *tabelAnggota, tabStartup *tabelStartup) {
 			fmt.Println("Akan Kembali ke Menu Utama")
 			countdownDetik(4)
 		} else {
-			printAnggota(*tabAnggota, lokasi, tabStartup)
+			printAnggota(*tabAnggota, lokasi, *tabStartup)
 			fmt.Println("Tekan 0 Untuk kembali")
 			fmt.Scan(&pilih)
 			sortAnggota(tabAnggota)
@@ -311,6 +341,70 @@ func menuUrutkanStartup(tabel *tabelStartup) {
 	}
 }
 
+func menuLaporanStartup(tabel tabelStartup) {
+	clear()
+	var bidang [NMAX]string
+	var jumlah [NMAX]int
+	var totalPendanaan [NMAX]int
+	var totalTahun [NMAX]int
+	var n, i, j int
+	jum := hitungStartUp(tabel)
+
+	// Proses data startup
+	for i = 0; i < jum; i++ {
+		ditemukan := false
+		j = 0
+		for j < n && !ditemukan {
+			if strings.ToLower(tabel[i].bidang) == strings.ToLower(bidang[j]) {
+				jumlah[j]++
+				totalPendanaan[j] += tabel[i].pendanaan
+				totalTahun[j] += tabel[i].tahun
+				ditemukan = true
+			}
+			j++
+		}
+		if !ditemukan {
+			bidang[n] = tabel[i].bidang
+			jumlah[n] = 1
+			totalPendanaan[n] = tabel[i].pendanaan
+			totalTahun[n] = tabel[i].tahun
+			n++
+		}
+	}
+
+	fmt.Println("\n📌 Jumlah Startup per Bidang Usaha:")
+	for i = 0; i < n; i++ {
+		fmt.Printf("- %-15s : %d startup\n", bidang[i], jumlah[i])
+	}
+
+	fmt.Println("\n💰 Total Pendanaan per Bidang Usaha:")
+	for i = 0; i < n; i++ {
+		fmt.Printf("- %-15s : %d juta\n", bidang[i], totalPendanaan[i])
+	}
+
+	fmt.Println("\n📈 Rata-Rata Pendanaan per Bidang Usaha:")
+	for i = 0; i < n; i++ {
+		rata := totalPendanaan[i] / jumlah[i]
+		fmt.Printf("- %-15s : %d juta\n", bidang[i], rata)
+	}
+
+	fmt.Println("\n📅 Rata-Rata Tahun Berdiri per Bidang Usaha:")
+	for i = 0; i < n; i++ {
+		rataTahun := totalTahun[i] / jumlah[i]
+		fmt.Printf("- %-15s : %d\n", bidang[i], rataTahun)
+	}
+
+	maxJumlah := jumlah[0]
+	favorit := bidang[0]
+	for i = 1; i < n; i++ {
+		if jumlah[i] > maxJumlah {
+			maxJumlah = jumlah[i]
+			favorit = bidang[i]
+		}
+	}
+	fmt.Printf("\n🏆 Bidang usaha terfavorit: %s (%d startup)\n", favorit, maxJumlah)
+}
+
 func inputData(tabel *tabelStartup) {
 	var i int
 	var lanjut bool = true
@@ -380,7 +474,7 @@ func inputAnggota(tabel *tabelAnggota, idStartup, jumlah int) { //input anggota 
 	}
 }
 
-func printAnggota(tabel tabelAnggota, idStartup int, tabStartup *tabelStartup) {
+func printAnggota(tabel tabelAnggota, idStartup int, tabStartup tabelStartup) {
 	var i, no int
 	var ada bool
 	fmt.Println("\n=========================================")
@@ -730,10 +824,15 @@ func main() {
 	var tabStartup tabelStartup
 	var tabAnggota tabelAnggota
 	var menu1 bool = true
-	clear()
-	menuAwal()
-	fmt.Scan(&menu)
+	var role int
+	var pilih int
+	var nama string
+	var lokasi int
+	menu = 1
 	for menu != 0 && menu1 {
+		clear()
+		menuAwal()
+		fmt.Scan(&menu)
 		switch menu {
 		case 1:
 			inputData(&tabStartup)
@@ -745,34 +844,98 @@ func main() {
 			menu1 = false
 		case 3:
 			changeLog()
-		case 0:
+		case 4:
 			os.Exit(0)
 		default:
 			clear()
 			menuAwal()
 			fmt.Scan(&menu)
 		}
+
 	}
+	for {
+		clear()
+		fmt.Println("\n╔══════════════════════════════════════╗")
+		fmt.Println("║      ⚙️     Masuk Sebagai      ⚙️    ║")
+		fmt.Println("╠══════════════════════════════════════╣")
+		fmt.Println("║1. 🔧 Admin                           ║")
+		fmt.Println("║2. 👤 Pengguna                        ║")
+		fmt.Println("╚══════════════════════════════════════╝")
+		fmt.Println("Masukkan peran anda")
+		fmt.Scan(&role)
+		for menu != 0 && role == 1 {
+			tampilkanMenuUtama()
+			fmt.Println("ADMIN 🔧")
+			fmt.Print("Pilih menu (1-6): ")
+			fmt.Scan(&pilihan)
 
-	for menu != 0 {
-		tampilkanMenuUtama()
-		fmt.Print("Pilih menu (1-6): ")
-		fmt.Scan(&pilihan)
+			switch pilihan {
+			case 1:
+				menuKelolaDataStartup(&tabStartup, &tabAnggota)
+			case 2:
+				menuKelolaTimStartup(&tabAnggota, &tabStartup)
+			case 3:
+				menuCariStartup(&tabStartup)
+			case 4:
+				menuUrutkanStartup(&tabStartup)
+			case 5:
+				menuLaporanStartup(tabStartup)
+				fmt.Scan(&pilihan)
+			case 6:
+				fmt.Println("\nTerima kasih telah menggunakan Aplikasi Manajemen Startup. Sampai Jumpa! 👋")
+				os.Exit(0)
+			case 9:
+				role = 0
+			default:
+				fmt.Println("Pilihan tidak valid. Silakan coba lagi.")
+				countdownDetik(2)
+			}
+		}
+		for menu != 0 && role == 2 {
+			menuPengguna()
+			fmt.Println("PENGGUNA 👤")
+			fmt.Print("Pilih menu (1-6): ")
+			fmt.Scan(&pilihan)
 
-		switch pilihan {
-		case 1:
-			menuKelolaDataStartup(&tabStartup, &tabAnggota)
-		case 2:
-			menuKelolaTimStartup(&tabAnggota, &tabStartup)
-		case 3:
-			menuCariStartup(&tabStartup)
-		case 4:
-			menuUrutkanStartup(&tabStartup)
-		case 5:
-			fmt.Println("\nTerima kasih telah menggunakan Aplikasi Manajemen Startup. Sampai Jumpa! 👋")
-			os.Exit(0)
-		default:
-			fmt.Println("Pilihan tidak valid. Silakan coba lagi.")
+			switch pilihan {
+			case 1:
+				sortIndexStartup(&tabStartup)
+				printData(tabStartup)
+				fmt.Println("Tekan 0 Untuk kembali")
+				fmt.Scan(&pilih)
+			case 2:
+				sortIndexStartup(&tabStartup)
+				printData(tabStartup)
+				fmt.Println("Nama Startup yang ingin dilihat anggotanya ?")
+				fmt.Scan(&nama)
+				nama = strings.ToLower(nama)
+				lokasi = sequentialSearchStartup(tabStartup, nama)
+				if lokasi == -1 {
+					fmt.Println("Data tidak ditemukan")
+					fmt.Println("Akan Kembali ke Menu Utama")
+					countdownDetik(4)
+				} else {
+					printAnggota(tabAnggota, lokasi, tabStartup)
+					fmt.Println("Tekan 0 Untuk kembali")
+					fmt.Scan(&pilih)
+					sortAnggota(&tabAnggota)
+				}
+			case 3:
+				menuCariStartup(&tabStartup)
+			case 4:
+				menuUrutkanStartup(&tabStartup)
+			case 5:
+				menuLaporanStartup(tabStartup)
+				fmt.Scan(&pilihan)
+			case 6:
+				fmt.Println("\nTerima kasih telah menggunakan Aplikasi Manajemen Startup. Sampai Jumpa! 👋")
+				os.Exit(0)
+			case 9:
+				role = 0
+			default:
+				fmt.Println("Pilihan tidak valid. Silakan coba lagi.")
+				countdownDetik(2)
+			}
 		}
 	}
 }
@@ -809,6 +972,7 @@ func loadDataStartup(tabel *tabelStartup) {
 }
 
 func changeLog() {
+	clear()
 	var pilih int
 	fmt.Println("v0.0.0 membuat func main serta tampilan awal")
 	fmt.Println("v0.0.1 menambahkan fitur sehingga pengguna dapat berinteraski dengan aplikasi")
