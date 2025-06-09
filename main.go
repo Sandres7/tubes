@@ -56,8 +56,10 @@ func tampilkanMenuUtama() {
 	clear()
 	fmt.Println("\n╔══════════════════════════════════════╗")
 	fmt.Println("║    🚀 APLIKASI MANAJEMEN STARTUP 🚀  ║")
-	fmt.Println("║        Dibuat oleh: Sandres          ║")
+	fmt.Println("║        Dibuat oleh: Sandres Sitorus  ║")
+	fmt.Println("║                     Alif Yasin       ║")
 	fmt.Println("║            103012400100              ║")
+	fmt.Println("║            103012400063              ║")
 	fmt.Println("╠══════════════════════════════════════╣")
 	fmt.Println("║1. 📁 Kelola Data Startup             ║")
 	fmt.Println("║2. 👥 Kelola Tim Startup              ║")
@@ -73,8 +75,10 @@ func menuPengguna() {
 	clear()
 	fmt.Println("\n╔══════════════════════════════════════╗")
 	fmt.Println("║    🚀 APLIKASI MANAJEMEN STARTUP 🚀  ║")
-	fmt.Println("║        Dibuat oleh: Sandres          ║")
+	fmt.Println("║        Dibuat oleh: Sandres Sitorus  ║")
+	fmt.Println("║                     Alif Yasin       ║")
 	fmt.Println("║            103012400100              ║")
+	fmt.Println("║            103012400063              ║")
 	fmt.Println("╠══════════════════════════════════════╣")
 	fmt.Println("║1. 📁 Tampilkan Startup               ║")
 	fmt.Println("║2. 👥 Tampilkan Anggota Startup       ║")
@@ -628,7 +632,7 @@ func sortIndexStartup(tabel *tabelStartup) {
 
 	jum = hitungStartUp(*tabel)
 	pass = 1
-
+	//Sandres - 103012400100
 	for pass < jum {
 		idx = pass - 1
 		i = pass
