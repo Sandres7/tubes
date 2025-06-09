@@ -8,8 +8,10 @@ Aplikasi ini adalah program berbasis **Go (Golang)** yang dirancang untuk memban
 
 ## 👨‍💻 Dibuat Oleh
 
-- **Nama**: Sandres  
-- **NIM**: 103012400100  
+- **Nama**: Sandres Sitorus
+- **NIM**: 103012400100
+- - **Nama**: Alif Yaasin
+- **NIM**: 103012400063
 - **Versi**: Beta v0.0.7  
 
 ---
