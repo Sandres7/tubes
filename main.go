@@ -205,7 +205,7 @@ func menuKelolaTimStartup(tabAnggota *tabelAnggota, tabStartup *tabelStartup) {
 			sortAnggota(tabAnggota)
 			countdownDetik(1)
 		}
-
+		//Sandres - 103012400100
 	case 2:
 		sortIndexStartup(tabStartup)
 		printData(*tabStartup)
@@ -251,8 +251,8 @@ func menuCariStartup(tabStartup *tabelStartup) {
 	fmt.Println("\n╔══════════════════════════════════════╗")
 	fmt.Println("║      🚀 PENCARIAN STARTUP 🚀         ║")
 	fmt.Println("╠══════════════════════════════════════╣")
-	fmt.Println("║1. 🔎 Cari Nama Startup               ║") //(Sequential Search)
-	fmt.Println("║2. 🔎 Cari Bidang Startup             ║") //binary search
+	fmt.Println("║1. 🔎 Cari Nama Startup               ║")
+	fmt.Println("║2. 🔎 Cari Bidang Startup             ║")
 	fmt.Println("║3. 🔙 Kembali ke Menu Utama           ║")
 	fmt.Println("╚══════════════════════════════════════╝")
 	fmt.Print("Pilih opsi: ")
@@ -291,8 +291,8 @@ func menuUrutkanStartup(tabel *tabelStartup) {
 	fmt.Println("\n╔══════════════════════════════════════╗")
 	fmt.Println("║      🚀 PENGURUTAN STARTUP 🚀        ║")
 	fmt.Println("╠══════════════════════════════════════╣")
-	fmt.Println("║1. ⏳ Urut Tahun Berdiri              ║") //(Selection Sort)
-	fmt.Println("║2. 💰 Urut Pendanaan                  ║") //(Insertion Sort)
+	fmt.Println("║1. ⏳ Urut Tahun Berdiri              ║")
+	fmt.Println("║2. 💰 Urut Pendanaan                  ║")
 	fmt.Println("║3. 🔙 Kembali ke Menu Utama           ║")
 	fmt.Println("╚══════════════════════════════════════╝")
 	fmt.Print("Pilih opsi: ")
@@ -371,7 +371,7 @@ func menuLaporanStartup(tabel tabelStartup) {
 			n++
 		}
 	}
-
+	//Sandres - 103012400100
 	fmt.Println("\n📌 Jumlah Startup per Bidang Usaha:")
 	for i = 0; i < n; i++ {
 		fmt.Printf("- %-15s : %d startup\n", bidang[i], jumlah[i])
@@ -459,7 +459,7 @@ func printData(tabel tabelStartup) { // print data startup
 			tabel[i].tahun,
 			tabel[i].pendanaan)
 	}
-
+	//Sandres - 103012400100
 	fmt.Println("╚════╩════════════════════╩════════════════════╩════════╩══════════════════╝")
 }
 
@@ -483,7 +483,7 @@ func printAnggota(tabel tabelAnggota, idStartup int, tabStartup tabelStartup) {
 
 	fmt.Printf("%-5s %-20s %-20s\n", "No", "Nama Anggota", "Peran")
 	fmt.Println("-------------------------------------------")
-
+	//Sandres - 103012400100
 	ada = false
 	no = 1
 	for i = 0; i < NMAX; i++ {
@@ -545,7 +545,7 @@ func sortTahunAscending(tabel *tabelStartup) {
 		tabel[idx] = temp
 		pass = pass + 1
 	}
-
+	//Sandres - 103012400100
 }
 
 func sortTahunDescending(tabel *tabelStartup) {
@@ -602,16 +602,14 @@ func sortPendanaanAscending(tabel *tabelStartup) {
 func sortPendanaanDescending(tabel *tabelStartup) {
 	var i, idx, pass int
 	var temp startup
-	var jum int
-
-	jum = hitungStartUp(*tabel)
+	var jum int = hitungStartUp(*tabel)
 	pass = 1
 
 	for pass < jum {
 		idx = pass - 1
 		i = pass
 		for i < jum {
-			if tabel[idx].tahun < tabel[i].tahun {
+			if tabel[idx].pendanaan < tabel[i].pendanaan {
 				idx = i
 			}
 			i++
@@ -619,7 +617,7 @@ func sortPendanaanDescending(tabel *tabelStartup) {
 		temp = tabel[pass-1]
 		tabel[pass-1] = tabel[idx]
 		tabel[idx] = temp
-		pass = pass + 1
+		pass++
 	}
 }
 
@@ -673,18 +671,9 @@ func sortAnggota(tabel *tabelAnggota) {
 }
 
 func tambahStartup(tabel *tabelStartup) {
-	var i, idBaru int
-	var stop bool = false
 	var jum int = hitungStartUp(*tabel)
-	for i = 0; i < jum && stop == false; i++ {
-		if tabel[i+1].idStartup-tabel[i].idStartup > 1 {
-			idBaru = i + 1
-			stop = true
-		} else {
-			idBaru = jum
-		}
-	}
-	tabel[jum].idStartup = idBaru
+
+	tabel[jum].idStartup = jum
 	fmt.Println("Masukkan Data Start Up")
 	fmt.Print("Nama Start Up : ")
 	fmt.Scan(&tabel[jum].nama)
@@ -738,38 +727,18 @@ func sequentialSearchStartup(tabel tabelStartup, dicari string) int {
 	return -1
 }
 
-func binSearchStartup(tabel tabelStartup, dicari int) int { //harus berurutan
-	var left, right, mid int
-	var idx int
-	var jum int
-	sortIndexStartup(&tabel)
-	jum = hitungStartUp(tabel)
-
-	left = 0
-	right = jum - 1
-	idx = -1
-
-	for left <= right && idx == -1 {
-		mid = (left + right) / 2
-		if dicari < tabel[mid].idStartup {
-			right = mid - 1
-		} else if dicari > tabel[mid].idStartup {
-			left = mid + 1
-		} else {
-			idx = mid
-		}
-	}
-	return idx
-}
-
 func hapuStartup(tabel *tabelStartup, lokasi int) {
 	var i int
 	var jum int = hitungStartUp(*tabel)
-	sortIndexStartup(tabel)
-	for i = lokasi; i < jum; i++ {
+
+	for i = lokasi; i < jum-1; i++ {
 		tabel[i] = tabel[i+1]
 	}
-	tabel[jum] = startup{} //opsional karena array panjang
+
+	tabel[jum-1] = startup{}
+	for i = 0; i < jum-1; i++ {
+		tabel[i].idStartup = i
+	}
 }
 
 func printKategori(tabel tabelStartup, dicari string, bagian string) {
@@ -796,7 +765,7 @@ func printKategori(tabel tabelStartup, dicari string, bagian string) {
 				ada = true
 				nomor++
 			}
-
+			//Sandres - 103012400100
 		}
 	} else if bagian == "bidang" {
 		for i = 0; i < jum; i++ {
@@ -891,6 +860,7 @@ func main() {
 				countdownDetik(2)
 			}
 		}
+		// Sandres - 103012400100
 		for menu != 0 && role == 2 {
 			menuPengguna()
 			fmt.Println("PENGGUNA 👤")
@@ -975,13 +945,14 @@ func changeLog() {
 	clear()
 	var pilih int
 	fmt.Println("v0.0.0 membuat func main serta tampilan awal")
-	fmt.Println("v0.0.1 menambahkan fitur sehingga pengguna dapat berinteraski dengan aplikasi")
-	fmt.Println("v0.0.2 membuat fungsi bertujuan untuk memasukkan data startup dan print data startup")
-	fmt.Println("v0.0.3 memperbaiki tampilan data, dan menambahkan fitur")
-	fmt.Println("v0.0.4 perbaikan fitur untuk menampilkan data")
-	fmt.Println("v0.0.5 menambahkan fungsi baru untuk mencari data")
-	fmt.Println("v0.0.6 perbaikan opsi menu, perbaikan bug tampilan, perbaikan fitur")
-	fmt.Println("v0.0.7 pengoptimalan fitur dan memperbaiki tampilan")
+	fmt.Println("v0.1.1 menambahkan fitur sehingga pengguna dapat berinteraski dengan aplikasi")
+	fmt.Println("v0.2.2 membuat fungsi bertujuan untuk memasukkan data startup dan print data startup")
+	fmt.Println("v0.3.3 memperbaiki tampilan data, dan menambahkan fitur")
+	fmt.Println("v0.4.4 perbaikan fitur untuk menampilkan data")
+	fmt.Println("v0.5.5 menambahkan fungsi baru untuk mencari data")
+	fmt.Println("v0.6.6 perbaikan opsi menu, perbaikan bug tampilan, perbaikan fitur")
+	fmt.Println("v0.7.1 menambahkan fitur user dan admin")
+	fmt.Println("v0.7.7 memperbaiki bug penambahan data startup")
 	fmt.Println()
 	fmt.Println("Tekan 0 Untuk kembali")
 	fmt.Scan(&pilih)
