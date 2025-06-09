@@ -10,7 +10,7 @@ Aplikasi ini adalah program berbasis **Go (Golang)** yang dirancang untuk memban
 
 - **Nama**: Sandres Sitorus
 - **NIM**: 103012400100
-- - **Nama**: Alif Yaasin
+- **Nama**: Alif Yaasin
 - **NIM**: 103012400063
 - **Versi**: Beta v0.0.7  
 
